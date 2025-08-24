@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Güllap Yazılım - Modern Web Uygulaması
 
 Bu proje, Güllap Yazılım için geliştirilmiş modern bir web uygulamasıdır. Next.js frontend ve Node.js backend teknolojileri kullanılarak oluşturulmuştur.
@@ -103,3 +104,6 @@ Bu proje Güllap Yazılım'a aittir. Tüm hakları saklıdır.
 ---
 
 ⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
+=======
+# gullapyazilim.io
+>>>>>>> 58ebfc27290b0807fc7fc4e021591ec6ce7fb0ba
