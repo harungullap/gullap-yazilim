@@ -1,4 +1,4 @@
-import React, { Suspense, ReactNode, forwardRef } from 'react';
+import React, { Suspense, ReactNode, forwardRef, useState, useEffect } from 'react';
 import { useLazyLoad } from '@/lib/useLazyLoad';
 
 interface LazyWrapperProps {
@@ -8,6 +8,8 @@ interface LazyWrapperProps {
   rootMargin?: string;
   className?: string;
   as?: 'div' | 'span';
+  priority?: 'high' | 'medium' | 'low';
+  delay?: number;
 }
 
 const LazyWrapper = forwardRef<HTMLElement | HTMLSpanElement, LazyWrapperProps>(({
@@ -16,16 +18,60 @@ const LazyWrapper = forwardRef<HTMLElement | HTMLSpanElement, LazyWrapperProps>(
   threshold = 0.1,
   rootMargin = '50px',
   className = '',
-  as = 'div'
+  as = 'div',
+  priority = 'medium',
+  delay = 0
 }, ref) => {
-  const { isVisible, ref: lazyRef } = useLazyLoad({ threshold, rootMargin });
+  // Mobile detection for better performance
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Default fallback based on 'as' prop
-  const defaultFallback = as === 'span' 
-    ? <span className="animate-pulse bg-gray-200 h-4 w-full inline-block rounded" />
-    : <div className="animate-pulse bg-gray-200 h-32 rounded-lg" />;
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-  const finalFallback = fallback || defaultFallback;
+  // Mobile-optimized settings
+  const mobileThreshold = isMobile ? 0.01 : threshold; // Mobilde çok daha erken yükleme
+  const mobileRootMargin = isMobile ? '100px' : rootMargin; // Mobilde daha geniş margin
+  const mobileDelay = isMobile ? 0 : delay; // Mobilde gecikme yok
+
+  const { isVisible, ref: lazyRef, isLoading } = useLazyLoad({ 
+    threshold: mobileThreshold, 
+    rootMargin: mobileRootMargin, 
+    priority, 
+    delay: mobileDelay 
+  });
+
+  // Enhanced fallback based on 'as' prop, priority and mobile
+  const getDefaultFallback = () => {
+    if (as === 'span') {
+      return (
+        <span className={`animate-pulse bg-gradient-to-r from-gray-200 to-gray-300 h-4 w-full inline-block rounded ${
+          priority === 'high' ? 'bg-blue-100' : priority === 'medium' ? 'bg-gray-100' : 'bg-gray-50'
+        } ${isMobile ? 'animate-pulse-fast' : ''}`} />
+      );
+    }
+    
+    return (
+      <div className={`animate-pulse bg-gradient-to-r from-gray-200 to-gray-300 h-32 rounded-lg ${
+        priority === 'high' ? 'bg-blue-100' : priority === 'medium' ? 'bg-gray-100' : 'bg-gray-50'
+      } ${isMobile ? 'animate-pulse-fast' : ''}`}>
+        <div className="flex items-center justify-center h-full">
+          <div className={`border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin ${
+            isMobile ? 'w-6 h-6' : 'w-8 h-8'
+          }`}></div>
+        </div>
+      </div>
+    );
+  };
+
+  const finalFallback = fallback || getDefaultFallback();
 
   // Merge refs
   const mergedRef = (node: HTMLElement | HTMLSpanElement | null) => {
@@ -50,7 +96,9 @@ const LazyWrapper = forwardRef<HTMLElement | HTMLSpanElement, LazyWrapperProps>(
           {children}
         </Suspense>
       ) : (
-        finalFallback
+        <Component className={`transition-opacity duration-300 ${isLoading ? 'opacity-75' : 'opacity-100'}`}>
+          {finalFallback}
+        </Component>
       )}
     </Component>
   );

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import GlitchText from '@/components/ui/GlitchText';
 import Typewriter from '@/components/ui/Typewriter';
+import NeuralNetwork from '@/components/ui/NeuralNetwork';
 
 interface FAQItem {
   id: string;
@@ -164,8 +165,9 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <NeuralNetwork />
       {/* Hero Section */}
-      <section className="relative z-10 pt-32 pb-20">
+      <section className="relative z-20 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -187,7 +189,7 @@ export default function FAQPage() {
       </section>
 
       {/* Search and Categories Section */}
-      <section className="relative z-10 py-10">
+      <section className="relative z-20 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-8">
@@ -227,7 +229,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="relative z-10 py-10">
+      <section className="relative z-20 py-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-4">
             {filteredFAQs.map((faq) => (
@@ -291,7 +293,7 @@ export default function FAQPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20">
+      <section className="relative z-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

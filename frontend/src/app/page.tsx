@@ -14,129 +14,16 @@ import {
   Cpu
 } from 'lucide-react';
 import { Button, Card, Badge } from 'flowbite-react';
-import { useEffect, useRef } from 'react';
 import { Suspense, lazy } from 'react';
 import Typewriter from '@/components/ui/Typewriter';
 import { SequentialTypewriter } from '@/components/ui/Typewriter';
 import GlitchText from '@/components/ui/GlitchText';
 import LazyWrapper from '@/components/ui/LazyWrapper';
+import NeuralNetwork from '@/components/ui/NeuralNetwork';
 
 // Lazy load components
 const LazyTypewriter = lazy(() => import('@/components/ui/Typewriter'));
 const LazyGlitchText = lazy(() => import('@/components/ui/GlitchText'));
-
-// Sinir ağları animasyonu için bileşen
-const NeuralNetwork = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Sinir ağı düğümleri
-    const nodes: Array<{x: number, y: number, vx: number, vy: number, connections: number[]}> = [];
-    const nodeCount = 50;
-    const connectionDistance = 150;
-
-    // Düğümleri oluştur
-    for (let i = 0; i < nodeCount; i++) {
-      nodes.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        connections: []
-      });
-    }
-
-    // Bağlantıları oluştur
-    nodes.forEach((node, i) => {
-      nodes.forEach((otherNode, j) => {
-        if (i !== j) {
-          const distance = Math.sqrt(
-            Math.pow(node.x - otherNode.x, 2) + Math.pow(node.y - otherNode.y, 2)
-          );
-          if (distance < connectionDistance) {
-            node.connections.push(j);
-          }
-        }
-      });
-    });
-
-    function animate() {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Düğümleri güncelle
-      nodes.forEach(node => {
-        node.x += node.vx;
-        node.y += node.vy;
-
-        // Sınırları kontrol et
-        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
-      });
-
-      // Bağlantıları çiz
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)';
-      ctx.lineWidth = 1;
-      nodes.forEach((node, i) => {
-        node.connections.forEach(connectionIndex => {
-          const otherNode = nodes[connectionIndex];
-          const distance = Math.sqrt(
-            Math.pow(node.x - otherNode.x, 2) + Math.pow(node.y - otherNode.y, 2)
-          );
-          
-          if (distance < connectionDistance) {
-            const opacity = 1 - (distance / connectionDistance);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.4})`;
-            ctx.beginPath();
-            ctx.moveTo(node.x, node.y);
-            ctx.lineTo(otherNode.x, otherNode.y);
-            ctx.stroke();
-          }
-        });
-      });
-
-      // Düğümleri çiz
-      nodes.forEach(node => {
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ zIndex: 0 }}
-    />
-  );
-};
 
 const services = [
   {
@@ -196,7 +83,7 @@ export default function Home() {
       <NeuralNetwork />
       
       {/* Hero Section - İki Kolonlu Layout */}
-      <section className="relative z-10 min-h-screen flex items-center overflow-hidden">
+      <section className="relative z-20 min-h-screen flex items-center overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Sol Kolon: Hero Content */}
@@ -320,7 +207,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="mb-8"
               >
-                <p className="text-base text-slate-600 font-mono">
+                <div className="text-base text-slate-600 font-mono">
                   <LazyWrapper as="span">
                     <Typewriter 
                       text="// Dijital çözümlerimiz ile işletmenizi geleceğe taşıyoruz" 
@@ -330,7 +217,7 @@ export default function Home() {
                       loopDelay={5000}
                     />
                   </LazyWrapper>
-                </p>
+                </div>
               </motion.div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -382,7 +269,7 @@ export default function Home() {
 
 
       {/* Features Section */}
-      <section className="relative z-10 py-20 bg-slate-50/80">
+      <section className="relative z-20 py-20 bg-slate-50/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -394,7 +281,7 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
               <span className="text-blue-600">Neden</span> <GlitchText text="Bizi Seçmelisiniz?" />
             </h2>
-            <p className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
+            <div className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
               <LazyWrapper as="span">
                 <Typewriter 
                   text="// Avantajlarımız ile fark yaratıyoruz" 
@@ -404,7 +291,7 @@ export default function Home() {
                   loopDelay={5000}
                 />
               </LazyWrapper>
-            </p>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -443,7 +330,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="relative z-10 py-20 bg-white/60">
+      <section className="relative z-20 py-20 bg-white/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -507,7 +394,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20 bg-slate-50/80">
+      <section className="relative z-20 py-20 bg-slate-50/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

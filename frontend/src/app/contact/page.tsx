@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import GlitchText from '@/components/ui/GlitchText';
 import Typewriter from '@/components/ui/Typewriter';
+import NeuralNetwork from '@/components/ui/NeuralNetwork';
 import { contactApi, ContactFormData } from '@/lib/api';
 import { useLoadingState } from '@/lib/useLoadingState';
 import { useToast } from '@/components/ui/Toast';
@@ -159,6 +160,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <NeuralNetwork />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 text-center">
         <div className="max-w-5xl mx-auto">

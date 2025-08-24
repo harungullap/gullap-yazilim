@@ -12,8 +12,33 @@ import {
   Users,
   Shield
 } from 'lucide-react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import GlitchText from '@/components/ui/GlitchText';
 import Typewriter from '@/components/ui/Typewriter';
+import NeuralNetwork from '@/components/ui/NeuralNetwork';
+import LazyWrapper from '@/components/ui/LazyWrapper';
+
+// Lazy load components with mobile optimization
+const LazyGlitchText = lazy(() => import('@/components/ui/GlitchText'));
+const LazyTypewriter = lazy(() => import('@/components/ui/Typewriter'));
+
+// Mobile detection hook
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+};
 
 const services = [
   {
@@ -186,40 +211,76 @@ const features = [
 ];
 
 export default function ServicesPage() {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <NeuralNetwork />
       {/* Hero Section */}
-      <section className="relative z-10 pt-32 pb-20">
+      <section className="relative z-20 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
           >
             <h1 className="text-5xl md:text-6xl font-bold text-slate-800 font-mono mb-6">
-              <span className="text-blue-600">Hizmet</span> <GlitchText text="Paketlerimiz" />
+              <span className="text-blue-600">Hizmet</span>
+              {isMobile ? (
+                <>
+                  <br />
+                  <GlitchText text="Paketlerimiz" />
+                </>
+              ) : (
+                <span className="ml-2">
+                  <LazyWrapper 
+                    as="span" 
+                    priority="high"
+                    delay={0}
+                    threshold={0.1}
+                    rootMargin="50px"
+                  >
+                    <LazyGlitchText text="Paketlerimiz" />
+                  </LazyWrapper>
+                </span>
+              )}
             </h1>
-            <p className="text-xl text-slate-600 font-mono max-w-3xl mx-auto">
-              <Typewriter 
-                text="İhtiyaçlarınıza uygun yazılım çözümlerini paket halinde sunuyoruz. Başlangıç, Orta ve Profesyonel seviyelerde hizmet veriyoruz."
-                speed={50}
-                loop={false}
-              />
-            </p>
+            <div className="text-xl text-slate-600 font-mono max-w-3xl mx-auto">
+              {isMobile ? (
+                <Typewriter 
+                  text="İhtiyaçlarınıza uygun yazılım çözümlerini paket halinde sunuyoruz. Başlangıç, Orta ve Profesyonel seviyelerde hizmet veriyoruz."
+                  speed={40}
+                  loop={false}
+                />
+              ) : (
+                <LazyWrapper 
+                  as="span" 
+                  priority="high"
+                  delay={0}
+                  threshold={0.1}
+                  rootMargin="50px"
+                >
+                  <LazyTypewriter 
+                    text="İhtiyaçlarınıza uygun yazılım çözümlerini paket halinde sunuyoruz. Başlangıç, Orta ve Profesyonel seviyelerde hizmet veriyoruz."
+                    speed={50}
+                    loop={false}
+                  />
+                </LazyWrapper>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="relative z-10 py-20">
+      <section className="relative z-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {services.map((service, serviceIndex) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: serviceIndex * 0.2 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? serviceIndex * 0.1 : serviceIndex * 0.2 }}
               className="mb-20"
             >
               <div className="text-center mb-12">
@@ -229,13 +290,20 @@ export default function ServicesPage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-800 font-mono mb-4">
                   {service.title}
                 </h2>
-                <p className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
-                  <Typewriter 
-                    text={service.description}
-                    speed={50}
-                    loop={false}
-                  />
-                </p>
+                <div className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
+                  <LazyWrapper 
+                    as="span"
+                    priority={isMobile ? "medium" : "medium"}
+                    delay={isMobile ? 100 : 200}
+                    threshold={isMobile ? 0.05 : 0.1}
+                  >
+                    <LazyTypewriter 
+                      text={service.description}
+                      speed={isMobile ? 40 : 50}
+                      loop={false}
+                    />
+                  </LazyWrapper>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -243,9 +311,8 @@ export default function ServicesPage() {
                   <motion.div
                     key={pkg.name}
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: pkgIndex * 0.1 }}
-                    viewport={{ once: true }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? pkgIndex * 0.05 : pkgIndex * 0.1 }}
                   >
                     <Card className={`relative h-full transition-all duration-300 hover:shadow-xl ${
                       pkg.popular 
@@ -291,25 +358,31 @@ export default function ServicesPage() {
       </section>
 
       {/* Features Section */}
-      <section className="relative z-10 py-20 bg-white/60">
+      <section className="relative z-20 py-20 bg-white/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
               <span className="text-blue-600">Neden</span> <GlitchText text="Bizi Seçmelisiniz?" />
             </h2>
-            <p className="text-lg text-slate-600 font-mono">
-              <Typewriter 
-                text="Kaliteli hizmet ve müşteri memnuniyeti odaklı yaklaşımımızla fark yaratıyoruz."
-                speed={50}
-                loop={false}
-              />
-            </p>
+            <div className="text-lg text-slate-600 font-mono">
+              <LazyWrapper 
+                as="span"
+                priority={isMobile ? "medium" : "medium"}
+                delay={isMobile ? 100 : 200}
+                threshold={isMobile ? 0.05 : 0.1}
+              >
+                <Typewriter 
+                  text="Kaliteli hizmet ve müşteri memnuniyeti odaklı yaklaşımımızla fark yaratıyoruz."
+                  speed={isMobile ? 40 : 50}
+                  loop={false}
+                />
+              </LazyWrapper>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -317,9 +390,8 @@ export default function ServicesPage() {
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? index * 0.05 : index * 0.1 }}
                 className="text-center"
               >
                 <Card className="bg-white/80 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 h-full">
@@ -342,13 +414,12 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20">
+      <section className="relative z-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="text-center"
           >
             <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-2xl shadow-blue-500/30">

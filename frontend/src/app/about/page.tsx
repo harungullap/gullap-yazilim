@@ -12,8 +12,33 @@ import {
   Shield,
   Zap
 } from 'lucide-react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import GlitchText from '@/components/ui/GlitchText';
 import Typewriter from '@/components/ui/Typewriter';
+import NeuralNetwork from '@/components/ui/NeuralNetwork';
+import LazyWrapper from '@/components/ui/LazyWrapper';
+
+// Lazy load components with mobile optimization
+const LazyGlitchText = lazy(() => import('@/components/ui/GlitchText'));
+const LazyTypewriter = lazy(() => import('@/components/ui/Typewriter'));
+
+// Mobile detection hook
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+};
 
 const values = [
   {
@@ -72,10 +97,13 @@ const team = [
 ];
 
 export default function AboutPage() {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <NeuralNetwork />
       {/* Hero Section */}
-      <section className="relative z-10 pt-32 pb-20">
+      <section className="relative z-20 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -83,39 +111,79 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-5xl md:text-6xl font-bold text-slate-800 font-mono mb-6">
-              <span className="text-blue-600">Hakkımızda</span> <GlitchText text="Güllap Yazılım" />
+              <span className="text-blue-600">Hakkımızda</span>
+              {isMobile ? (
+                <>
+                  <br />
+                  <GlitchText text="Güllap Yazılım" />
+                </>
+              ) : (
+                <span className="ml-2">
+                  <LazyWrapper 
+                    as="span" 
+                    priority="high"
+                    delay={0}
+                    threshold={0.1}
+                    rootMargin="50px"
+                  >
+                    <LazyGlitchText text="Güllap Yazılım" />
+                  </LazyWrapper>
+                </span>
+              )}
             </h1>
-            <p className="text-xl text-slate-600 font-mono max-w-3xl mx-auto">
-              <Typewriter 
-                text="2014 yılından bu yana teknoloji dünyasında yenilikçi yazılım çözümleri geliştiriyoruz. Müşteri memnuniyeti ve kalite odaklı yaklaşımımızla fark yaratıyoruz."
-                speed={50}
-                loop={false}
-              />
-            </p>
+            <div className="text-xl text-slate-600 font-mono max-w-3xl mx-auto">
+              {isMobile ? (
+                <Typewriter 
+                  text="2014 yılından bu yana teknoloji dünyasında yenilikçi yazılım çözümleri geliştiriyoruz. Müşteri memnuniyeti ve kalite odaklı yaklaşımımızla fark yaratıyoruz."
+                  speed={40}
+                  loop={false}
+                />
+              ) : (
+                <LazyWrapper 
+                  as="span" 
+                  priority="high"
+                  delay={0}
+                  threshold={0.1}
+                  rootMargin="50px"
+                >
+                  <LazyTypewriter 
+                    text="2014 yılından bu yana teknoloji dünyasında yenilikçi yazılım çözümleri geliştiriyoruz. Müşteri memnuniyeti ve kalite odaklı yaklaşımımızla fark yaratıyoruz."
+                    speed={50}
+                    loop={false}
+                  />
+                </LazyWrapper>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Company Story Section */}
-      <section className="relative z-10 py-20">
+      <section className="relative z-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
               <span className="text-blue-600">Şirket</span> <GlitchText text="Hikayemiz" />
             </h2>
-            <p className="text-lg text-slate-600 font-mono max-w-4xl mx-auto">
-              <Typewriter 
-                text="Güllap Yazılım, teknoloji tutkusu ve yenilikçi yaklaşım ile kuruldu. 10 yılı aşkın deneyimimizde, yüzlerce başarılı projeye imza attık ve müşterilerimizin güvenini kazandık."
-                speed={50}
-                loop={false}
-              />
-            </p>
+            <div className="text-lg text-slate-600 font-mono max-w-4xl mx-auto">
+              <LazyWrapper 
+                as="span"
+                priority={isMobile ? "medium" : "medium"}
+                delay={isMobile ? 100 : 200}
+                threshold={isMobile ? 0.05 : 0.1}
+              >
+                <Typewriter 
+                  text="Güllap Yazılım, teknoloji tutkusu ve yenilikçi yaklaşım ile kuruldu. 10 yılı aşkın deneyimimizde, yüzlerce başarılı projeye imza attık ve müşterilerimizin güvenini kazandık."
+                  speed={isMobile ? 40 : 50}
+                  loop={false}
+                />
+              </LazyWrapper>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -123,9 +191,8 @@ export default function AboutPage() {
               <motion.div
                 key={value.title}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? index * 0.05 : index * 0.1 }}
                 className="text-center"
               >
                 <Card className="bg-white/80 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 h-full">
@@ -147,22 +214,21 @@ export default function AboutPage() {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="bg-white/80 border border-blue-200 rounded-2xl p-8 md:p-12"
           >
             <div className="text-center mb-8">
               <h3 className="text-2xl md:text-3xl font-bold text-slate-800 font-mono mb-4">
                 Neden Güllap Yazılım?
               </h3>
-              <p className="text-slate-600 font-mono">
+              <div className="text-slate-600 font-mono">
                 <Typewriter 
                   text="Deneyimli ekibimiz, modern teknolojiler ve müşteri odaklı yaklaşımımızla projelerinizi hayata geçiriyoruz."
-                  speed={50}
+                  speed={isMobile ? 40 : 50}
                   loop={false}
                 />
-              </p>
+              </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -170,9 +236,8 @@ export default function AboutPage() {
                 <motion.div
                   key={item.title}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? index * 0.05 : index * 0.1 }}
                   className="text-center"
                 >
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-3">
@@ -192,25 +257,31 @@ export default function AboutPage() {
       </section>
 
       {/* Team Section */}
-      <section className="relative z-10 py-20 bg-white/60">
+      <section className="relative z-20 py-20 bg-white/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
               <span className="text-blue-600">Ekibimiz</span> <GlitchText text="Hakkında" />
             </h2>
-            <p className="text-lg text-slate-600 font-mono">
-              <Typewriter 
-                text="Deneyimli ve yetenekli ekibimiz ile projelerinizi başarıyla tamamlıyoruz."
-                speed={50}
-                loop={false}
-              />
-            </p>
+            <div className="text-lg text-slate-600 font-mono">
+              <LazyWrapper 
+                as="span"
+                priority={isMobile ? "medium" : "medium"}
+                delay={isMobile ? 100 : 200}
+                threshold={isMobile ? 0.05 : 0.1}
+              >
+                <Typewriter 
+                  text="Deneyimli ve yetenekli ekibimiz ile projelerinizi başarıyla tamamlıyoruz."
+                  speed={isMobile ? 40 : 50}
+                  loop={false}
+                />
+              </LazyWrapper>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -218,9 +289,8 @@ export default function AboutPage() {
               <motion.div
                 key={member.name}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? index * 0.05 : index * 0.1 }}
               >
                 <Card className="bg-white/80 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 h-full">
                   <div className="p-6">
@@ -255,13 +325,12 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20">
+      <section className="relative z-20 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.4 : 0.6 }}
             className="text-center"
           >
             <Card className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-2xl shadow-blue-500/30">
