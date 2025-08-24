@@ -8,6 +8,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
+  basePath: process.env.NODE_ENV === 'production' ? '/gullap-yazilim' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/gullap-yazilim' : '',
   images: {
     unoptimized: true,
     formats: ['image/webp', 'image/avif'],
