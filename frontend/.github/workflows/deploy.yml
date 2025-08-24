@@ -21,9 +21,11 @@ jobs:
           cache: 'npm'
           
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm ci
         
       - name: Build
+        working-directory: ./frontend
         run: npm run build
         
       - name: Deploy to GitHub Pages
@@ -31,5 +33,5 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          publish_dir: ./frontend/out
           cname: # Eğer custom domain kullanacaksanız buraya yazın
