@@ -94,7 +94,7 @@ export const submitContact = asyncHandler(async (req: Request, res: Response, ne
     // Veritabanına kaydet
     const contact = await createContact(contactData);
 
-    // Email gönder (async olarak)
+    // Email gönder (async olarak) - Email service kaldırıldı
     // sendContactEmail(contact).catch(error => {
     //   console.error('Email gönderimi başarısız:', error);
     // });

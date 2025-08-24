@@ -19,7 +19,11 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gullap
 export const connectDB = async (): Promise<void> => {
   try {
     // MongoDB'ye bağlan (basit seçenekler ile)
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
 
     console.log('✅ MongoDB veritabanına başarıyla bağlanıldı');
     console.log(`🔗 Database URI: ${MONGODB_URI}`);

@@ -12,33 +12,18 @@ import {
   Users,
   Shield
 } from 'lucide-react';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useMobileDetection } from '@/lib/useMobileDetection';
 import GlitchText from '@/components/ui/GlitchText';
 import Typewriter from '@/components/ui/Typewriter';
 import NeuralNetwork from '@/components/ui/NeuralNetwork';
-import LazyWrapper from '@/components/ui/LazyWrapper';
+
 
 // Lazy load components with mobile optimization
-const LazyGlitchText = lazy(() => import('@/components/ui/GlitchText'));
-const LazyTypewriter = lazy(() => import('@/components/ui/Typewriter'));
+// const LazyGlitchText = lazy(() => import('@/components/ui/GlitchText'));
+// const LazyTypewriter = lazy(() => import('@/components/ui/Typewriter'));
 
-// Mobile detection hook
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  return isMobile;
-};
 
 const services = [
   {
@@ -211,7 +196,7 @@ const features = [
 ];
 
 export default function ServicesPage() {
-  const isMobile = useIsMobile();
+  const isMobile = useMobileDetection();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -233,15 +218,7 @@ export default function ServicesPage() {
                 </>
               ) : (
                 <span className="ml-2">
-                  <LazyWrapper 
-                    as="span" 
-                    priority="high"
-                    delay={0}
-                    threshold={0.1}
-                    rootMargin="50px"
-                  >
-                    <LazyGlitchText text="Paketlerimiz" />
-                  </LazyWrapper>
+                  <GlitchText text="Paketlerimiz" />
                 </span>
               )}
             </h1>
@@ -253,19 +230,11 @@ export default function ServicesPage() {
                   loop={false}
                 />
               ) : (
-                <LazyWrapper 
-                  as="span" 
-                  priority="high"
-                  delay={0}
-                  threshold={0.1}
-                  rootMargin="50px"
-                >
-                  <LazyTypewriter 
-                    text="İhtiyaçlarınıza uygun yazılım çözümlerini paket halinde sunuyoruz. Başlangıç, Orta ve Profesyonel seviyelerde hizmet veriyoruz."
-                    speed={50}
-                    loop={false}
-                  />
-                </LazyWrapper>
+                <Typewriter 
+                  text="İhtiyaçlarınıza uygun yazılım çözümlerini paket halinde sunuyoruz. Başlangıç, Orta ve Profesyonel seviyelerde hizmet veriyoruz."
+                  speed={50}
+                  loop={false}
+                />
               )}
             </div>
           </motion.div>
@@ -291,18 +260,11 @@ export default function ServicesPage() {
                   {service.title}
                 </h2>
                 <div className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
-                  <LazyWrapper 
-                    as="span"
-                    priority={isMobile ? "medium" : "medium"}
-                    delay={isMobile ? 100 : 200}
-                    threshold={isMobile ? 0.05 : 0.1}
-                  >
-                    <LazyTypewriter 
-                      text={service.description}
-                      speed={isMobile ? 40 : 50}
-                      loop={false}
-                    />
-                  </LazyWrapper>
+                  <Typewriter 
+                    text={service.description}
+                    speed={isMobile ? 40 : 50}
+                    loop={false}
+                  />
                 </div>
               </div>
 
@@ -370,18 +332,11 @@ export default function ServicesPage() {
               <span className="text-blue-600">Neden</span> <GlitchText text="Bizi Seçmelisiniz?" />
             </h2>
             <div className="text-lg text-slate-600 font-mono">
-              <LazyWrapper 
-                as="span"
-                priority={isMobile ? "medium" : "medium"}
-                delay={isMobile ? 100 : 200}
-                threshold={isMobile ? 0.05 : 0.1}
-              >
-                <Typewriter 
-                  text="Kaliteli hizmet ve müşteri memnuniyeti odaklı yaklaşımımızla fark yaratıyoruz."
-                  speed={isMobile ? 40 : 50}
-                  loop={false}
-                />
-              </LazyWrapper>
+              <Typewriter 
+                text="Kaliteli hizmet ve müşteri memnuniyeti odaklı yaklaşımımızla fark yaratıyoruz."
+                speed={isMobile ? 40 : 50}
+                loop={false}
+              />
             </div>
           </motion.div>
 

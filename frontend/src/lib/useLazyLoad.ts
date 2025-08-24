@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useMobileDetection } from './useMobileDetection';
 
 interface UseLazyLoadOptions {
   threshold?: number;
@@ -25,18 +26,7 @@ export const useLazyLoad = (options: UseLazyLoadOptions = {}): UseLazyLoadReturn
   } = options;
 
   // Mobile detection for aggressive loading
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useMobileDetection();
 
   const [isVisible, setIsVisible] = useState(false);
   const [hasIntersected, setHasIntersected] = useState(false);

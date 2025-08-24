@@ -279,7 +279,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
-              <span className="text-blue-600">Neden</span> <GlitchText text="Bizi Seçmelisiniz?" />
+              <span className="text-blue-600">{'>'}</span> <span className="text-blue-600">Neden</span> <GlitchText text="Bizi Seçmelisiniz?" />
             </h2>
             <div className="text-lg text-slate-600 font-mono max-w-2xl mx-auto">
               <LazyWrapper as="span">
@@ -340,7 +340,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-4">
-              <span className="text-blue-600">Rakamlarla</span> <GlitchText text="Başarılarımız" />
+              <span className="text-blue-600">{'>'}</span> <span className="text-blue-600">Rakamlarla</span> <GlitchText text="Başarılarımız" />
             </h2>
           </motion.div>
 
@@ -405,7 +405,7 @@ export default function Home() {
           >
             <div className="bg-white/80 backdrop-blur-sm border border-blue-200 rounded-xl p-8 sm:p-12 max-w-4xl mx-auto shadow-xl min-h-[400px] flex flex-col justify-center">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800 font-mono mb-6">
-                <span className="text-blue-600">Projenizi</span> <GlitchText text="Başlatmaya Hazır mısınız?" />
+                <span className="text-blue-600">{'>'}</span> <span className="text-blue-600">Projenizi</span> <GlitchText text="Başlatmaya Hazır mısınız?" />
               </h2>
               <div className="text-base sm:text-lg text-slate-600 font-mono mb-8 leading-relaxed space-y-2 min-h-[120px] flex flex-col justify-center">
                 <LazyWrapper>

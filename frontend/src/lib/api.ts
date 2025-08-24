@@ -55,7 +55,12 @@ async function apiRequest<T>(
       ...options,
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      throw new ApiError('Sunucudan geçersiz yanıt alındı', response.status);
+    }
 
     if (!response.ok) {
       throw new ApiError(

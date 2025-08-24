@@ -27,7 +27,7 @@ const swaggerOptions = {
           description: 'Development server'
         },
         {
-          url: 'https://api.gullapsoftware.com',
+          url: 'https://api.gullapyazilim.com',
           description: 'Production server'
         }
       ]

@@ -1,82 +1,36 @@
-# Güllap Yazılım - Frontend
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Modern web teknolojileri ile geliştirilmiş kurumsal web sitesi.
+## Getting Started
 
-## 🚀 GitHub Pages Deploy
-
-Bu proje GitHub Pages üzerinde çalışacak şekilde konfigüre edilmiştir.
-
-### 📋 Gereksinimler
-
-- Node.js 18+
-- npm veya yarn
-
-### 🔧 Kurulum
+First, run the development server:
 
 ```bash
-# Bağımlılıkları yükleyin
-npm install
-
-# Geliştirme sunucusunu başlatın
 npm run dev
-
-# Production build
-npm run build
-
-# Static export (GitHub Pages için)
-npm run export
-
-# Deploy (build + export)
-npm run deploy
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 🌐 GitHub Pages Deploy
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-1. **Repository ayarlarında GitHub Pages'i aktif edin**
-   - Settings > Pages
-   - Source: "Deploy from a branch"
-   - Branch: `gh-pages` (otomatik oluşturulacak)
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-2. **Main branch'e push yapın**
-   ```bash
-   git add .
-   git commit -m "Update for GitHub Pages"
-   git push origin main
-   ```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-3. **GitHub Actions otomatik olarak deploy edecek**
+## Learn More
 
-### 📁 Build Çıktısı
+To learn more about Next.js, take a look at the following resources:
 
-- `out/` klasörü GitHub Pages'e yüklenecek
-- Tüm statik dosyalar bu klasörde olacak
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### ⚠️ Önemli Notlar
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-- Bu proje static export kullanır
-- API routes çalışmaz
-- Server-side rendering yok
-- Sadece client-side özellikler
+## Deploy on Vercel
 
-### 🔗 Canlı Site
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Deploy tamamlandıktan sonra:
-- `https://username.github.io/repo-name` adresinde erişilebilir
-- Custom domain kullanıyorsanız: `https://yourdomain.com`
-
-## 🛠️ Teknolojiler
-
-- **Framework**: Next.js 15
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **UI Components**: Flowbite React
-- **Icons**: Lucide React
-
-## 📱 Özellikler
-
-- Responsive tasarım
-- Lazy loading
-- Neural network animasyonu
-- Typewriter efektleri
-- Glitch text animasyonları
-- Mobile-first approach
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

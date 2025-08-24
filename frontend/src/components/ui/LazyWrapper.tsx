@@ -1,5 +1,6 @@
 import React, { Suspense, ReactNode, forwardRef, useState, useEffect } from 'react';
 import { useLazyLoad } from '@/lib/useLazyLoad';
+import { useMobileDetection } from '@/lib/useMobileDetection';
 
 interface LazyWrapperProps {
   children: ReactNode;
@@ -23,18 +24,7 @@ const LazyWrapper = forwardRef<HTMLElement | HTMLSpanElement, LazyWrapperProps>(
   delay = 0
 }, ref) => {
   // Mobile detection for better performance
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useMobileDetection();
 
   // Mobile-optimized settings
   const mobileThreshold = isMobile ? 0.01 : threshold; // Mobilde çok daha erken yükleme
